@@ -1,0 +1,54 @@
+Project simple_bank {
+  database_type: 'PostgreSQL'
+  Note: '''
+    # simple_bank Database
+  '''
+}
+
+Table user as U{
+  username varchar [pk]
+  hashed_password varchar [not null]
+  full_name varchar [not null]
+  email varchar [unique, not null]
+  password_changed_at timestamptz [not null, default:'0001-01-01 00:00:00Z']
+  created_at timestamptz [not null,default:`now()`]
+}
+
+Table accounts as A {
+  id bigserial [pk]
+  owner varchar [ref: > U.username,not null]
+  balance bigint [not null]
+  currency varchar [not null]
+  created_at timestamptz [not null,default:`now()`]
+
+  Indexes {
+    owner
+    (owner,currency) [unique]
+  }
+}
+
+Table entries {
+  id bigserial [pk]
+  account_id bigint [ref: > A.id,not null]
+  amount bigint [not null,note:'可以是正数也可以是负数']
+  created_at timestamptz [not null,default:`now()`]
+
+  Indexes {
+    account_id
+  }
+}
+
+TABLE transfers {
+  id bigserial [pk]
+  from_account_id bigint [ref: > A.id,not null]
+  to_account_id bigint [ref: > A.id,not null]
+  amount bigint [not null,note:'必须是正数']
+  created_at timestamptz [not null,default:`now()`]
+
+  Indexes {
+    from_account_id
+    to_account_id
+    (from_account_id,to_account_id)
+  }
+}
+ 
