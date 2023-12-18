@@ -12,6 +12,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+// Server serves HTTP requests for our banking service.
 type Server struct {
 	config     util.Config
 	store      db.Store
@@ -19,6 +20,7 @@ type Server struct {
 	router     *gin.Engine
 }
 
+// NewServer creates a new HTTP server and set up routing.
 func NewServer(config util.Config, store db.Store) (*Server, error) {
 	tokenMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
 	if err != nil {
@@ -55,6 +57,7 @@ func (server *Server) setupRouter() {
 
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)
+	router.POST("/tokens/renew_access", server.renewAccessToken)
 
 	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
 
