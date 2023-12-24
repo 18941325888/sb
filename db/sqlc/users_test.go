@@ -62,7 +62,7 @@ func TestUpdateUserOnlyFullName(t *testing.T) {
 
 	newFullName := util.RandomOwner()
 	updateUser, err := testQueries.UpdateUser(context.Background(), UpdateUserParams{
-		Usrename: oldUser.Username,
+		Username: oldUser.Username,
 		FullName: sql.NullString{
 			String: newFullName,
 			Valid:  true,
@@ -81,7 +81,7 @@ func TestUpdateUserOnlyEmail(t *testing.T) {
 
 	newEmail := util.RandomEmail()
 	updateUser, err := testQueries.UpdateUser(context.Background(), UpdateUserParams{
-		Usrename: oldUser.Username,
+		Username: oldUser.Username,
 		Email: sql.NullString{
 			String: newEmail,
 			Valid:  true,
@@ -103,7 +103,7 @@ func TestUpdateUserOnlyPassword(t *testing.T) {
 	require.NoError(t, err)
 
 	updateUser, err := testQueries.UpdateUser(context.Background(), UpdateUserParams{
-		Usrename: oldUser.Username,
+		Username: oldUser.Username,
 		HashedPassword: sql.NullString{
 			String: newHashedPassword,
 			Valid:  true,
@@ -127,7 +127,7 @@ func TestUpdateUserAllFields(t *testing.T) {
 	newFullName := util.RandomOwner()
 
 	updateUser, err := testQueries.UpdateUser(context.Background(), UpdateUserParams{
-		Usrename: oldUser.Username,
+		Username: oldUser.Username,
 		HashedPassword: sql.NullString{
 			String: newHashedPassword,
 			Valid:  true,
