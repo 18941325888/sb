@@ -89,6 +89,40 @@
         ]
       }
     },
+    "/v1/update_email": {
+      "patch": {
+        "summary": "Update email",
+        "description": "Use this API to update email",
+        "operationId": "SimpleBank_UpdateEmail",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateEmailResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdateEmailRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SimpleBank"
+        ]
+      }
+    },
     "/v1/update_user": {
       "patch": {
         "summary": "Update user",
@@ -225,6 +259,25 @@
         }
       }
     },
+    "pbUpdateEmailRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "pbUpdateEmailResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/pbUser"
+        }
+      }
+    },
     "pbUpdateUserRequest": {
       "type": "object",
       "properties": {
@@ -232,9 +285,6 @@
           "type": "string"
         },
         "fullName": {
-          "type": "string"
-        },
-        "email": {
           "type": "string"
         },
         "password": {
@@ -269,6 +319,9 @@
         "createdAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "isEmailVerified": {
+          "type": "boolean"
         }
       }
     },

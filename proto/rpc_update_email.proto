@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb;
+
+import "user.proto";
+
+option go_package = "github.com/18941325888/sb/pb";
+
+message UpdateEmailRequest {
+    string username = 1;
+    string email = 2;
+}
+
+message UpdateEmailResponse{
+    User user = 1;
+}

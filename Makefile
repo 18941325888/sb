@@ -41,6 +41,7 @@ server:
 
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/18941325888/sb/db/sqlc Store
+	mockgen -package mockwk -destination worker/mock/distributor.go github.com/18941325888/sb/worker TaskDistributor
 
 proto:
 	rm -f pb/*.go

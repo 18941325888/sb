@@ -35,10 +35,6 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 			String: req.GetFullName(),
 			Valid:  req.FullName != nil,
 		},
-		Email: sql.NullString{
-			String: req.GetEmail(),
-			Valid:  req.Email != nil,
-		},
 	}
 
 	if req.Password != nil {
@@ -87,12 +83,6 @@ func validateUpdateUserRequest(req *pb.UpdateUserRequest) (violations []*errdeta
 	if req.FullName != nil {
 		if err := val.ValidateFullName(req.GetFullName()); err != nil {
 			violations = append(violations, fieldViolation("full_name", err))
-		}
-	}
-
-	if req.Email != nil {
-		if err := val.ValidateEmail(req.GetEmail()); err != nil {
-			violations = append(violations, fieldViolation("email", err))
 		}
 	}
 

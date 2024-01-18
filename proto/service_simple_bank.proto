@@ -5,6 +5,7 @@ package pb;
 import "google/api/annotations.proto";
 import "rpc_create_user.proto";
 import "rpc_update_user.proto";
+import "rpc_update_email.proto";
 import "rpc_login_user.proto";
 import "rpc_verify_email.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -42,6 +43,17 @@ service SimpleBank {
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to update user";
             summary: "Update user";
+        };
+    }
+
+    rpc UpdateEmail (UpdateEmailRequest) returns (UpdateEmailResponse) {
+        option (google.api.http) = {
+            patch: "/v1/update_email"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to update email";
+            summary: "Update email";
         };
     }
 
