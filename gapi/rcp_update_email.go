@@ -2,7 +2,7 @@ package gapi
 
 import (
 	"context"
-	"database/sql"
+	"errors"
 	"time"
 
 	db "github.com/18941325888/sb/db/sqlc"
@@ -10,6 +10,7 @@ import (
 	"github.com/18941325888/sb/val"
 	"github.com/18941325888/sb/worker"
 	"github.com/hibiken/asynq"
+	"github.com/jackc/pgx/v5/pgtype"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -32,11 +33,11 @@ func (server *Server) UpdateEmail(ctx context.Context, req *pb.UpdateEmailReques
 
 	arg := db.UpdateUserParams{
 		Username: req.GetUsername(),
-		Email: sql.NullString{
+		Email: pgtype.Text{
 			String: req.GetEmail(),
 			Valid:  true,
 		},
-		IsEmailVerified: sql.NullBool{
+		IsEmailVerified: pgtype.Bool{
 			Bool:  false,
 			Valid: true,
 		},
@@ -44,7 +45,7 @@ func (server *Server) UpdateEmail(ctx context.Context, req *pb.UpdateEmailReques
 
 	user, err := server.store.UpdateUser(ctx, arg)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, db.ErrRecordNotFound) {
 			return nil, status.Errorf(codes.NotFound, "user not found")
 
 		}
