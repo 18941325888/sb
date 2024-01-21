@@ -7,6 +7,7 @@ import (
 
 	db "github.com/18941325888/sb/db/sqlc"
 	"github.com/18941325888/sb/pb"
+	"github.com/18941325888/sb/util"
 	"github.com/18941325888/sb/val"
 	"github.com/18941325888/sb/worker"
 	"github.com/hibiken/asynq"
@@ -17,7 +18,7 @@ import (
 )
 
 func (server *Server) UpdateEmail(ctx context.Context, req *pb.UpdateEmailRequest) (*pb.UpdateEmailResponse, error) {
-	authPayload, err := server.authorizeUser(ctx)
+	authPayload, err := server.authorizeUser(ctx, []string{util.DepositorRole, util.BankerRole})
 	if err != nil {
 		return nil, unauthenticatedError(err)
 	}
@@ -27,7 +28,7 @@ func (server *Server) UpdateEmail(ctx context.Context, req *pb.UpdateEmailReques
 		return nil, invalidArgumentError(violations)
 	}
 
-	if authPayload.Username != req.GetUsername() {
+	if authPayload.Role != util.BankerRole && authPayload.Username != req.GetUsername() {
 		return nil, status.Errorf(codes.PermissionDenied, "cannot update other user's info")
 	}
 
