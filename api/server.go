@@ -29,22 +29,10 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 	server := &Server{
 		config: config, store: store, tokenMaker: tokenMaker,
 	}
-	router := gin.Default()
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("currency", validCurrency)
 	}
-
-	router.Use(cors.New(cors.Config{
-		AllowOriginFunc: func(origin string) bool {
-			return true
-		},
-		AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTION"},
-		// AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept", "token "},
-		AllowHeaders:     []string{"*"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-	}))
 
 	server.setupRouter()
 
@@ -54,6 +42,17 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 func (server *Server) setupRouter() {
 
 	router := gin.Default()
+
+	router.Use(cors.New(cors.Config{
+		AllowOriginFunc: func(origin string) bool {
+			return true
+		},
+		AllowMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTION"},
+		AllowHeaders: []string{"Origin", "Content-Type", "Authorization", "Accept", "token "},
+		// AllowHeaders:     []string{"*"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
 
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)
